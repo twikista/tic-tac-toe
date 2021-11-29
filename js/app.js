@@ -11,5 +11,17 @@ const ticTacToeGame = (function () {
       ["", "", ""],
       ["", "", ""],
     ],
+    //check if game baord is filled up with palyer symbols
+    boardIsFilled() {
+      let count = null;
+      for (i = 0; i < 3; i++) {
+        for (j = 0; j < 3; j++) {
+          if (gameBoard.board[i][j] !== "") {
+            count++;
+          }
+        }
+      }
+      return count === 9;
+    },
   };
 })();
