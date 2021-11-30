@@ -23,6 +23,8 @@ const ticTacToeGame = (function () {
       }
       return count === 9;
     },
+
+    //
     boardState() {
       let boardState = null;
       if (this.boardIsFilled()) {
@@ -115,4 +117,84 @@ const ticTacToeGame = (function () {
       endOfGameModal.firstElementChild.textContent = `Tie Game!`;
     },
   };
+
+  const gameModal = {
+    openModal() {
+      endOfGameModal.classList.add("active");
+    },
+    closeModal() {
+      endOfGameModal.classList.remove("active");
+    },
+  };
+
+  const gameState = {
+    gameEnd() {
+      gameModal.openModal();
+    },
+    gameReset(e) {
+      const target = e.target;
+      if (target.classList.contains("reset-game-btn")) {
+        gameBoard.resetBoard();
+        gameDisplay.resetGameDisplay();
+        players.currentPlayer = symbols.playerOneSymbol;
+        gameDisplay.displayPlayerTurn();
+      }
+      console.table(gameBoard.board);
+    },
+    newGame(e) {
+      const target = e.target;
+      if (target.classList.contains("play-again-btn")) {
+        gameModal.closeModal();
+        gameBoard.resetBoard();
+        gameDisplay.resetGameDisplay();
+        if (players.currentPlayer === symbols.playerOneSymbol) {
+          return;
+        } else {
+          players.currentPlayer = symbols.playerOneSymbol;
+          gameDisplay.displayPlayerTurn();
+        }
+      }
+    },
+  };
+
+  const gameDisplay = {
+    displayGameBoard(target) {
+      if (target.textContent !== "") {
+        return;
+      }
+      target.textContent = players.currentPlayer;
+    },
+    displayPlayerTurn() {
+      const playerTurn = appBody.firstElementChild;
+      playerTurn.textContent = `player's turn to play: ${players.currentPlayer}`;
+    },
+
+    resetGameDisplay() {
+      const displayCells = [...boardCells.children];
+      let i = 0;
+      while (i < displayCells.length) {
+        displayCells[i].textContent = "";
+        i++;
+      }
+    },
+    endGame(e) {
+      const target = e.target;
+      if (!target.classList.contains("end-game-btn")) {
+        return;
+      }
+      const endGamepage = appBody.nextElementSibling;
+      const targetPage = document.querySelector(target.dataset.displaypage);
+      if (targetPage === endGamepage) {
+        appBody.style.display = "none";
+        endGamepage.style.display = "flex";
+      }
+      gameModal.closeModal();
+    },
+  };
+
+  boardCells.addEventListener("click", players.playerMove.bind(players));
+  appBody.addEventListener("click", gameState.gameReset.bind(gameState));
+  appBody.addEventListener("click", gameState.newGame.bind(gameState));
+  this.addEventListener("DOMContentLoaded", gameDisplay.displayPlayerTurn);
+  appBody.addEventListener("click", gameDisplay.endGame);
 })();
