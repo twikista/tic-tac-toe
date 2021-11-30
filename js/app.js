@@ -71,4 +71,48 @@ const ticTacToeGame = (function () {
       }
     },
   };
+
+  const symbols = {
+    playerOneSymbol: "X",
+    playerTwoSymbol: "O",
+  };
+
+  const players = {
+    currentPlayer: symbols.playerOneSymbol,
+
+    switchCurrentPlayer() {
+      this.currentPlayer =
+        this.currentPlayer === symbols.playerOneSymbol
+          ? symbols.playerTwoSymbol
+          : symbols.playerOneSymbol;
+      return this.currentPlayer;
+    },
+    playerMove(e) {
+      const target = e.target;
+      const rowIndex = parseInt(target.dataset.rowindex);
+      const colIndex = parseInt(target.dataset.colindex);
+      gameDisplay.displayGameBoard(target);
+      gameBoard.board[rowIndex][colIndex] = this.currentPlayer;
+      players.playerMoveOutcome();
+      players.switchCurrentPlayer();
+      gameDisplay.displayPlayerTurn();
+    },
+    playerMoveOutcome() {
+      if (gameBoard.boardState() === "win") {
+        console.log(`player ${players.currentPlayer} is the winner`);
+        gameState.gameEnd();
+        this.win();
+      } else if (gameBoard.boardState() === "draw") {
+        console.log("draw");
+        gameState.gameEnd();
+        this.tie();
+      }
+    },
+    win() {
+      endOfGameModal.firstElementChild.textContent = `player ${players.currentPlayer} is the winner`;
+    },
+    tie() {
+      endOfGameModal.firstElementChild.textContent = `Tie Game!`;
+    },
+  };
 })();
