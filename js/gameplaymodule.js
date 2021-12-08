@@ -14,165 +14,138 @@ const gamePlayModule = (function () {
     console.log(currentPlayer);
     return currentPlayer;
   }
-//function that handles players move
+  //function that handles players move
   function playersMove(e) {
     humanPlayerMove(e);
     setTimeout(() => {
       aiPlayerMove(gameBoardModule.currentBoardState);
     }, 1000);
   }
-//function that handles human player moves and save move to gameBoard
-function humanPlayerMove(e) {
-  const target = e.target;
-  const cellIndex = parseInt(target.dataset.cellindex);
-  if (
-    !target.classList.contains("game-board-cell") ||
-    target.textContent !== ""
-  ) {
-    return;
+  //function that handles human player moves and save move to gameBoard
+  function humanPlayerMove(e) {
+    const target = e.target;
+    const cellIndex = parseInt(target.dataset.cellindex);
+    if (
+      !target.classList.contains("game-board-cell") ||
+      target.textContent !== ""
+    ) {
+      return;
+    }
+    displayGameBoard(target);
+    gameBoardModule.gameBoard[cellIndex] = humanPlayer;
+    gameBoardModule.updateCurrentBoardState();
+    playerMoveOutcome();
+    switchCurrentPlayer();
+    displayPlayerTurn();
   }
-  displayGameBoard(target);
-  gameBoardModule.gameBoard[cellIndex] = humanPlayer;
-  gameBoardModule.updateCurrentBoardState();
-  playerMoveOutcome();
-  switchCurrentPlayer();
-  displayPlayerTurn();
-}
-//function that handles AI player moves and save move to gameBoard
-function aiPlayerMove(board) {
-  //save AI player best game move determined by minimax function to a variable
-  const bestPlayMoveInfo = aiModule.miniMax(
-    gameBoardModule.currentBoardState,
-    aiPlayer
-  );
-  //grab the index of gameBoard cell for AI player 
-  const targetCellIndex = bestPlayMoveInfo.index;
-  const aiTargetCells = [...boardCells.children];
-  let aiTargetCell = aiTargetCells[targetCellIndex];
-  if (aiTargetCell.textContent !== "") {
-    return;
+  //function that handles AI player moves and save move to gameBoard
+  function aiPlayerMove(board) {
+    //save AI player best game move determined by minimax function to a variable
+    const bestPlayMoveInfo = aiModule.miniMax(
+      gameBoardModule.currentBoardState,
+      aiPlayer
+    );
+    //grab the index of gameBoard cell for AI player
+    const targetCellIndex = bestPlayMoveInfo.index;
+    const aiTargetCells = [...boardCells.children];
+    let aiTargetCell = aiTargetCells[targetCellIndex];
+    if (aiTargetCell.textContent !== "") {
+      return;
+    }
+    //display AI player move
+    aiTargetCell.textContent = aiPlayer;
+    //add AI player move to gameBoard
+    gameBoardModule.gameBoard[targetCellIndex] = aiPlayer;
+    //update current board state to reflect AI player move
+    gameBoardModule.updateCurrentBoardState();
+    playerMoveOutcome();
+    switchCurrentPlayer();
+    displayPlayerTurn();
   }
-  //display AI player move 
-  aiTargetCell.textContent = aiPlayer;
-  //add AI player move to gameBoard
-  gameBoardModule.gameBoard[targetCellIndex] = aiPlayer;
-  //update current board state to reflect AI player move
-  gameBoardModule.updateCurrentBoardState();
-  playerMoveOutcome();
-  switchCurrentPlayer();
-  console.log(currentPlayer);
-  displayPlayerTurn();
-}
-
-
-
-
-    playerMove(e) {
-      const target = e.target;
-      const rowIndex = parseInt(target.dataset.rowindex);
-      const colIndex = parseInt(target.dataset.colindex);
-      gameDisplay.displayGameBoard(target);
-      gameBoard.board[rowIndex][colIndex] = this.currentPlayer;
-      players.playerMoveOutcome();
-      players.switchCurrentPlayer();
-      gameDisplay.displayPlayerTurn();
-    },
-    playerMoveOutcome() {
-      if (gameBoard.boardState() === "win") {
-        console.log(`player ${players.currentPlayer} is the winner`);
-        gameState.gameEnd();
-        this.win();
-      } else if (gameBoard.boardState() === "draw") {
-        console.log("draw");
-        gameState.gameEnd();
-        this.tie();
-      }
-    },
-    win() {
-      endOfGameModal.firstElementChild.textContent = `player ${players.currentPlayer} is the winner`;
-    },
-    tie() {
+  //convert winning player symbol to winning player name
+  function gameWinner(currentPlayer) {
+    let winner = null;
+    if (currentPlayer === "x") {
+      winner = "human-Player";
+    } else {
+      winner = "ai-Player";
+    }
+    return winner;
+  }
+  //determine if player move result in a terminal state (win or draw)
+  function playerMoveOutcome() {
+    const boardWinState = gameBoardModule.gameBoardWinStates();
+    if (boardWinState) {
+      endOfGameModal.firstElementChild.textContent = `${gameWinner(
+        currentPlayer
+      )} Wins`;
+      displayGameModal();
+    } else if (gameBoardModule.boardIsFilled() && !boardWinState) {
       endOfGameModal.firstElementChild.textContent = `Tie Game!`;
-    },
-  };
+      displayGameModal();
+    }
+  }
+  //reset game on button click
+  function gameReset(e) {
+    const target = e.target;
+    if (target.classList.contains("reset-game-btn")) {
+      gameBoardModule.resetBoard();
+      resetGameDisplay();
+      currentPlayer = humanPlayer;
+      displayPlayerTurn();
+    }
+  }
 
-  const gameModal = {
-    openModal() {
-      endOfGameModal.classList.add("active");
-    },
-    closeModal() {
-      endOfGameModal.classList.remove("active");
-    },
-  };
-
-  const gameState = {
-    gameEnd() {
-      gameModal.openModal();
-    },
-    gameReset(e) {
-      const target = e.target;
-      if (target.classList.contains("reset-game-btn")) {
-        gameBoard.resetBoard();
-        gameDisplay.resetGameDisplay();
-        players.currentPlayer = symbols.playerOneSymbol;
-        gameDisplay.displayPlayerTurn();
-      }
-      console.table(gameBoard.board);
-    },
-    newGame(e) {
-      const target = e.target;
-      if (target.classList.contains("play-again-btn")) {
-        gameModal.closeModal();
-        gameBoard.resetBoard();
-        gameDisplay.resetGameDisplay();
-        if (players.currentPlayer === symbols.playerOneSymbol) {
-          return;
-        } else {
-          players.currentPlayer = symbols.playerOneSymbol;
-          gameDisplay.displayPlayerTurn();
-        }
-      }
-    },
-  };
-
-  const gameDisplay = {
-    displayGameBoard(target) {
-      if (target.textContent !== "") {
+  //statrt new game after a game ends
+  function newGame(e) {
+    const target = e.target;
+    if (target.classList.contains("play-again-btn")) {
+      closeGameModal();
+      gameBoardModule.resetBoard();
+      resetGameDisplay();
+      if (currentPlayer === humanPlayer) {
         return;
+      } else {
+        currentPlayer = humanPlayer;
+        displayPlayerTurn();
       }
-      target.textContent = players.currentPlayer;
-    },
-    displayPlayerTurn() {
-      const playerTurn = appBody.firstElementChild;
-      playerTurn.textContent = `player's turn to play: ${players.currentPlayer}`;
-    },
+    }
+  }
 
-    resetGameDisplay() {
-      const displayCells = [...boardCells.children];
-      let i = 0;
-      while (i < displayCells.length) {
-        displayCells[i].textContent = "";
-        i++;
-      }
-    },
-    endGame(e) {
-      const target = e.target;
-      if (!target.classList.contains("end-game-btn")) {
-        return;
-      }
-      const endGamepage = appBody.nextElementSibling;
-      const targetPage = document.querySelector(target.dataset.displaypage);
-      if (targetPage === endGamepage) {
-        appBody.style.display = "none";
-        endGamepage.style.display = "flex";
-      }
-      gameModal.closeModal();
-    },
-  };
+  function displayGameBoard(target) {
+    if (target.textContent !== "") {
+      console.log(target.textContent);
+      return;
+    }
+    target.textContent = humanPlayer;
+  }
+  function displayPlayerTurn() {
+    const playerTurn = appBody.firstElementChild;
+    playerTurn.textContent = `player's turn to play: ${currentPlayer}`;
+  }
 
-  boardCells.addEventListener("click", players.playerMove.bind(players));
-  appBody.addEventListener("click", gameState.gameReset.bind(gameState));
-  appBody.addEventListener("click", gameState.newGame.bind(gameState));
-  this.addEventListener("DOMContentLoaded", gameDisplay.displayPlayerTurn);
-  appBody.addEventListener("click", gameDisplay.endGame);
+  function resetGameDisplay() {
+    const displayCells = [...boardCells.children];
+    let i = 0;
+    while (i < displayCells.length) {
+      displayCells[i].textContent = "";
+      i++;
+    }
+  }
+
+  function displayGameModal() {
+    endOfGameModal.classList.add("active");
+  }
+
+  function closeGameModal() {
+    endOfGameModal.classList.remove("active");
+  }
+
+  boardCells.addEventListener("click", playersMove);
+  appBody.addEventListener("click", gameReset);
+  appBody.addEventListener("click", newGame);
+  this.addEventListener("DOMContentLoaded", displayPlayerTurn);
+  appBody.addEventListener("click", endGame);
+
+  return { currentPlayer };
 })();
