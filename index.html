@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.13.0/css/all.css" />
+    <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;500&family=Nunito:wght@400;500;600;700;900&family=Varela+Round&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
     <title>Tic-Tac-Toe Game</title>
 </head>
@@ -11,97 +13,47 @@
     <div class="app-container">
         <header class="app-header">
             <div class="header">
-                <span class="logo">TIK-TAK</span><span class="log"></span>
+                <span class="logo">TIK-TAK</span>
                 <div class="hero-text">
                     <H1>Classic Game</H1>
                 </div>
             </div>
         </header>
         <main class="app-body">
-            <h2 class="current-player">player X</h2>
+            <h2 class="current-player"></h2>
             <div class="game-board">
-                    <div class="game-board-cell" data-rowindex="0" data-colindex="0"></div>
-                    <div class="game-board-cell" data-rowindex="0" data-colindex="1"></div>
-                    <div class="game-board-cell" data-rowindex="0" data-colindex="2"></div>
-                    <div class="game-board-cell" data-rowindex="1" data-colindex="0"></div>
-                    <div class="game-board-cell" data-rowindex="1" data-colindex="1"></div>
-                    <div class="game-board-cell" data-rowindex="1" data-colindex="2"></div>
-                    <div class="game-board-cell" data-rowindex="2" data-colindex="0"></div>
-                    <div class="game-board-cell" data-rowindex="2" data-colindex="1"></div>
-                    <div class="game-board-cell" data-rowindex="2" data-colindex="2"></div>
+                    <div class="game-board-cell" data-cellindex="0"></div>
+                    <div class="game-board-cell" data-cellindex="1"></div>
+                    <div class="game-board-cell" data-cellindex="2"></div>
+                    <div class="game-board-cell" data-cellindex="3"></div>
+                    <div class="game-board-cell" data-cellindex="4"></div>
+                    <div class="game-board-cell" data-cellindex="5"></div>
+                    <div class="game-board-cell" data-cellindex="6"></div>
+                    <div class="game-board-cell" data-cellindex="7"></div>
+                    <div class="game-board-cell" data-cellindex="8"></div>
             </div>
             <button class="reset-game-btn">Reset Game</button>
             <div class="end-of-game-modal">
                 <h2 class="end-of-game-message"></h2>
                 <div class="end-of-game-btn">
                     <button class="play-again-btn">Play Again</button>
-                    <button class="end-game-btn" data-displaypage="#end-game-page">End Game</button>
+                    
                 </div>
             </div>
         </main>
-        <section class="end-game-page" id="end-game-page">
-            <h2>Check out my other projects:</h2>
-            <div class="other-projects">
-                <div class="projects rock-papper-project">
-                    <div class="content">
-                        <h3>Library App</h3>
-                    </div>
-                    
-                    <div class="project-text flex column">
-                        <a href="#">view live demo</a>
-                        <a href="#">view code</a>
-                    </div>
-                </div>
-                <div class="projects calculator-project">
-                    <div class="content">
-                        <h3>Calculator App</h3>
-                    </div>
-                    <div class="project-text flex column">
-                        <a href="#">view live demo</a>
-                        <a href="#">view code</a>
-                    </div>
-                </div>
-                <div class="projects etch-a-sketch">
-                    <div class="content">
-                        <h3>Sketch Padi App</h3>
-                    </div>
-                    <div class="project-text flex column">
-                        <a href="#">view live demo</a>
-                        <a href="#">view code</a>
-                    </div>
-                </div>
-                <div class="projects rock-paper-scissors">
-                    <div class="content">
-                        <h3>Rock Paper scissors</h3>
-                    </div>
-                    <div class="project-text flex column">
-                        <a href="#">view live demo</a>
-                        <a href="#">view code</a>
-                    </div>
-                </div>
-                <div class="projects google-home-page">
-                    <img src="images/google-home-page.jpg" alt="">
-                    <div class="project-text flex column">
-                        <a href="#">view live demo</a>
-                        <a href="#">view code</a>
-                    </div>
-                </div>
-            </div>
-        </section>
         <footer class="app-footer">
-            <div class="copy-right">created by viro &copy;2021</div>
             <div class="socials flex">
                 <a href="https://github.com/twikista"><i class="fab fa-github"></i></a>
                 <a href="https://github.com/twikista"><i class="fab fa-twitter"></i></a> 
                 <a href="https://github.com/twikista"><i class="fab fa-linkedin"></i></a> 
             </div>
+            <div class="copy-right flex">created by viro &copy;2021</div>
         </footer>
     </div>
  
-    
-
-
-
-    <script src="js/app.js"></script>
+    <script src="js/module.js"></script>
+    <script src="js/gameboardmodule.js"></script>
+    <script src="js/myai.js"></script>
 </body>
 </html>
+
