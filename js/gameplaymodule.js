@@ -3,6 +3,17 @@ const gamePlayModule = (function () {
   const boardCells = document.querySelector(".game-board");
   const endOfGameModal = document.querySelector(".end-of-game-modal");
   const appBody = document.querySelector(".app-body");
+  //define users
+  const aiPlayer = "o";
+  const humanPlayer = "x";
+  //set current player
+  currentPlayer = "x";
+  //switch between players after each game move
+  function switchCurrentPlayer() {
+    currentPlayer = currentPlayer === humanPlayer ? aiPlayer : humanPlayer;
+    console.log(currentPlayer);
+    return currentPlayer;
+  }
 
   const gameBoard = {
     //define game board array
