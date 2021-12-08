@@ -8,98 +8,40 @@ const gamePlayModule = (function () {
   const humanPlayer = "x";
   //set current player
   currentPlayer = "x";
-  //switch between players after each game move
+  //switch between players after each board move
   function switchCurrentPlayer() {
     currentPlayer = currentPlayer === humanPlayer ? aiPlayer : humanPlayer;
     console.log(currentPlayer);
     return currentPlayer;
   }
+//function that handles players move
+  function playersMove(e) {
+    humanPlayerMove(e);
+    setTimeout(() => {
+      aiPlayerMove(gameBoardModule.currentBoardState);
+    }, 1000);
+  }
+//function that handles human player moves and save move to gameBoard
+function humanPlayerMove(e) {
+  const target = e.target;
+  const cellIndex = parseInt(target.dataset.cellindex);
+  if (
+    !target.classList.contains("game-board-cell") ||
+    target.textContent !== ""
+  ) {
+    return;
+  }
+  displayGameBoard(target);
+  gameBoardModule.gameBoard[cellIndex] = humanPlayer;
+  gameBoardModule.updateCurrentBoardState();
+  playerMoveOutcome();
+  switchCurrentPlayer();
+  displayPlayerTurn();
+}
 
-  const gameBoard = {
-    //define game board array
-    board: [
-      ["", "", ""],
-      ["", "", ""],
-      ["", "", ""],
-    ],
-    //check if game baord is filled up with palyer symbols
-    boardIsFilled() {
-      let count = null;
-      for (i = 0; i < 3; i++) {
-        for (j = 0; j < 3; j++) {
-          if (gameBoard.board[i][j] !== "") {
-            count++;
-          }
-        }
-      }
-      return count === 9;
-    },
 
-    //
-    boardState() {
-      let boardState = null;
-      if (this.boardIsFilled()) {
-        boardState = "draw";
-      }
-      for (i = 0; i < 3; i++) {
-        if (
-          this.board[i][0] !== "" &&
-          this.board[i][0] === this.board[i][1] &&
-          this.board[i][0] === this.board[i][2]
-        ) {
-          boardState = "win";
-        }
-      }
 
-      for (j = 0; j < 3; j++) {
-        if (
-          this.board[0][j] !== "" &&
-          this.board[0][j] === this.board[1][j] &&
-          this.board[0][j] === this.board[2][j]
-        ) {
-          boardState = "win";
-        }
-      }
 
-      for (i = 0; i < 3; i++) {
-        if (
-          (this.board[0][0] !== "" &&
-            this.board[0][0] === this.board[1][1] &&
-            this.board[0][0] === this.board[2][2]) ||
-          (this.board[0][2] !== "" &&
-            this.board[0][2] === this.board[1][1] &&
-            this.board[0][2] === this.board[2][0])
-        ) {
-          boardState = "win";
-        }
-      }
-
-      return boardState;
-    },
-    resetBoard() {
-      for (let i = 0; i < gameBoard.board.length; i++) {
-        for (let j = 0; j < gameBoard.board.length; j++) {
-          gameBoard.board[i][j] = "";
-        }
-      }
-    },
-  };
-
-  const symbols = {
-    playerOneSymbol: "X",
-    playerTwoSymbol: "O",
-  };
-
-  const players = {
-    currentPlayer: symbols.playerOneSymbol,
-
-    switchCurrentPlayer() {
-      this.currentPlayer =
-        this.currentPlayer === symbols.playerOneSymbol
-          ? symbols.playerTwoSymbol
-          : symbols.playerOneSymbol;
-      return this.currentPlayer;
-    },
     playerMove(e) {
       const target = e.target;
       const rowIndex = parseInt(target.dataset.rowindex);
