@@ -1,4 +1,4 @@
-const ticTacToeGame = (function () {
+const gamePlayModule = (function () {
   //cache HTML elements
   const boardCells = document.querySelector(".game-board");
   const endOfGameModal = document.querySelector(".end-of-game-modal");
