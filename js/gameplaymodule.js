@@ -38,6 +38,31 @@ function humanPlayerMove(e) {
   switchCurrentPlayer();
   displayPlayerTurn();
 }
+//function that handles AI player moves and save move to gameBoard
+function aiPlayerMove(board) {
+  //save AI player best game move determined by minimax function to a variable
+  const bestPlayMoveInfo = aiModule.miniMax(
+    gameBoardModule.currentBoardState,
+    aiPlayer
+  );
+  //grab the index of gameBoard cell for AI player 
+  const targetCellIndex = bestPlayMoveInfo.index;
+  const aiTargetCells = [...boardCells.children];
+  let aiTargetCell = aiTargetCells[targetCellIndex];
+  if (aiTargetCell.textContent !== "") {
+    return;
+  }
+  //display AI player move 
+  aiTargetCell.textContent = aiPlayer;
+  //add AI player move to gameBoard
+  gameBoardModule.gameBoard[targetCellIndex] = aiPlayer;
+  //update current board state to reflect AI player move
+  gameBoardModule.updateCurrentBoardState();
+  playerMoveOutcome();
+  switchCurrentPlayer();
+  console.log(currentPlayer);
+  displayPlayerTurn();
+}
 
 
 
