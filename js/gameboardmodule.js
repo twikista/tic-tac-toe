@@ -1,7 +1,7 @@
 const gameBoardModule = (function () {
   //define game board array
   const gameBoard = ["", "", "", "", "", "", "", "", ""];
-  //get current state og gameBoard
+  //get current state of gameBoard
   const currentBoardState = [];
   function updateCurrentBoardState() {
     for (let i = 0; i < gameBoard.length; i++) {
@@ -11,6 +11,17 @@ const gameBoardModule = (function () {
         currentBoardState.splice(i, 1, gameBoard[i]);
       }
     }
+  }
+  //get all empty cells on gameboard
+  const emptyBoardCellIndex = [];
+  function getEmptyIndex(bla) {
+    emptyBoardCellIndex.splice(0, emptyBoardCellIndex.length);
+    for (let i = 0; i < bla.length; i++) {
+      if (bla[i] !== "x" && bla[i] !== "o") {
+        emptyBoardCellIndex.splice(i, 0, i);
+      }
+    }
+    return emptyBoardCellIndex;
   }
   //check if all cells on gameBoard is filled
   function boardIsFilled() {
