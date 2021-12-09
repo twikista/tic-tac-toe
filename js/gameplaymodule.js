@@ -145,7 +145,7 @@ const gamePlayModule = (function () {
   appBody.addEventListener("click", gameReset);
   appBody.addEventListener("click", newGame);
   this.addEventListener("DOMContentLoaded", displayPlayerTurn);
-  appBody.addEventListener("click", endGame);
+  // appBody.addEventListener("click", endGame);
 
   return { currentPlayer };
 })();

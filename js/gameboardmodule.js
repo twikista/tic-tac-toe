@@ -82,5 +82,7 @@ const gameBoardModule = (function () {
     currentBoardState,
     resetBoard,
     updateCurrentBoardState,
+    getEmptyIndex,
+    emptyBoardCellIndex,
   };
 })();
