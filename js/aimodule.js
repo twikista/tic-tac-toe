@@ -97,3 +97,15 @@ const aiModule = (function () {
 
   return { miniMax };
 })();
+
+const beatableAiModule = (function () {
+  function aiMove(emptyBoardCells) {
+    const playIndex = Math.floor(Math.random() * emptyBoardCells.length);
+    console.log(playIndex);
+    const indexToPlay = emptyBoardCells[playIndex];
+    console.log(indexToPlay);
+    return indexToPlay;
+  }
+
+  return { aiMove };
+})();
