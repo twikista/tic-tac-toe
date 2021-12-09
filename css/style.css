@@ -47,6 +47,33 @@ header{
     
 }
 
+.game-mode-wrapper{
+    margin-bottom: 15px;
+}
+
+select{
+    display: block;
+    appearance:none;
+    background-color:transparent;
+    border: 2px solid lawngreen;
+    outline: none;
+    padding: 4px;
+    border-radius: 3px;
+    color: lawngreen;
+    text-align: center;
+    font-weight: 600;
+    cursor: pointer;   
+}
+
+select > option{
+    appearance: none;
+    background-color: rgb(24, 24, 24);
+    color: var(--primary-color);
+    outline: none;
+    border: none;
+    font-weight: 600;
+}
+
 .current-player{
     color: var(--secondary-color);
     margin-bottom: 30px;

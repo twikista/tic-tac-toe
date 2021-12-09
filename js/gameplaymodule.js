@@ -120,7 +120,7 @@ const gamePlayModule = (function () {
     target.textContent = humanPlayer;
   }
   function displayPlayerTurn() {
-    const playerTurn = appBody.firstElementChild;
+    const playerTurn = appBody.firstElementChild.nextElementSibling;
     playerTurn.textContent = `player's turn to play: ${currentPlayer}`;
   }
 
