@@ -140,6 +140,18 @@ const gamePlayModule = (function () {
   function closeGameModal() {
     endOfGameModal.classList.remove("active");
   }
+  //choose game mode;
+  let activeGameMode = null;
+  function setGameMode() {
+    const gameModeElement = document.querySelector("#game-mode");
+    gameModeElement.addEventListener("change", () => {
+      activeGameMode =
+        gameModeElement.options[gameModeElement.selectedIndex].value;
+      console.log(activeGameMode);
+      console.log(typeof activeGameMode);
+    });
+    return activeGameMode;
+  }
 
   boardCells.addEventListener("click", playersMove);
   appBody.addEventListener("click", gameReset);
