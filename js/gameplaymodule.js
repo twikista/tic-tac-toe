@@ -15,11 +15,16 @@ const gamePlayModule = (function () {
     return currentPlayer;
   }
   //function that handles players move
-  function playersMove(e) {
-    humanPlayerMove(e);
-    setTimeout(() => {
-      aiPlayerMove(gameBoardModule.currentBoardState);
-    }, 1000);
+  function playersMove(e, gameMode) {
+    if (gameMode === "hard") {
+      humanPlayerMove(e);
+      setTimeout(aiPlayerMove, 1000);
+    } else if (gameMode === "easy") {
+      humanPlayerMove(e);
+      setTimeout(beatableAiMove, 1000);
+    } else {
+      return;
+    }
   }
   //function that handles human player moves and save move to gameBoard
   function humanPlayerMove(e) {
@@ -39,17 +44,20 @@ const gamePlayModule = (function () {
     displayPlayerTurn();
   }
   //function that handles AI player moves and save move to gameBoard
-  function aiPlayerMove(board) {
+  function aiPlayerMove() {
+    // console.log(board);
     //save AI player best game move determined by minimax function to a variable
     const bestPlayMoveInfo = aiModule.miniMax(
       gameBoardModule.currentBoardState,
       aiPlayer
     );
+    console.log(bestPlayMoveInfo);
     //grab the index of gameBoard cell for AI player
     const targetCellIndex = bestPlayMoveInfo.index;
     const aiTargetCells = [...boardCells.children];
     let aiTargetCell = aiTargetCells[targetCellIndex];
-    if (aiTargetCell.textContent !== "") {
+    console.log(aiTargetCell);
+    if (gameBoardModule.boardIsFilled()) {
       return;
     }
     //display AI player move
@@ -62,6 +70,35 @@ const gamePlayModule = (function () {
     switchCurrentPlayer();
     displayPlayerTurn();
   }
+
+  /************hhhhhhhhhh */
+  function beatableAiMove() {
+    // console.log(board);
+    //save AI player best game move determined by minimax function to a variable
+    const emptyBoardCells = gameBoardModule.getEmptyIndex(
+      gameBoardModule.currentBoardState
+    );
+    const selectedPlayCell = beatableAiModule.aiMove(emptyBoardCells);
+    console.log(selectedPlayCell);
+    //grab the index of gameBoard cell for AI player
+    const aiTargetCells = [...boardCells.children];
+    let aiTargetCell = aiTargetCells[selectedPlayCell];
+    console.log(aiTargetCell);
+    if (gameBoardModule.boardIsFilled()) {
+      return;
+    }
+    //display AI player move
+    aiTargetCell.textContent = aiPlayer;
+    //add AI player move to gameBoard
+    gameBoardModule.gameBoard[selectedPlayCell] = aiPlayer;
+    //update current board state to reflect AI player move
+    gameBoardModule.updateCurrentBoardState();
+    playerMoveOutcome();
+    switchCurrentPlayer();
+    displayPlayerTurn();
+  }
+
+  /*********hhhhhh */
   //convert winning player symbol to winning player name
   function gameWinner(currentPlayer) {
     let winner = null;
@@ -153,7 +190,9 @@ const gamePlayModule = (function () {
     return activeGameMode;
   }
 
-  boardCells.addEventListener("click", playersMove);
+  boardCells.addEventListener("click", (e) => {
+    playersMove(e, setGameMode());
+  });
   appBody.addEventListener("click", gameReset);
   appBody.addEventListener("click", newGame);
   this.addEventListener("DOMContentLoaded", displayPlayerTurn);

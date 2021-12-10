@@ -21,13 +21,14 @@ body{
     min-height: 100vh;
     place-items: center;
     background-color: rgb(24, 24, 24);
+    min-width: 240px;
 }
 
 header{
     width: 100%;
     border-bottom: var(--primary-color) 2px dotted;
     color: var(--primary-color);
-    padding: 10px 8px;
+    padding: 8px 8px;
     font-family: 'Varela Round', sans-serif;
 }
 
@@ -49,6 +50,21 @@ header{
 
 .game-mode-wrapper{
     margin-bottom: 15px;
+    align-items: center;
+}
+
+.error-message{
+    display: inline-block;
+    font-family: 'Nunito', sans-serif;
+    font-size: clamp(0.7rem, calc(0.4px + 1vw), 1rem);
+    font-weight: 400;
+    color:orangered;
+    padding: 5px 0;
+    text-transform: uppercase;
+    align-items: center;
+    text-align: center;
+    display: none;
+
 }
 
 select{
@@ -57,12 +73,18 @@ select{
     background-color:transparent;
     border: 2px solid lawngreen;
     outline: none;
-    padding: 4px;
+    padding: 5px;
     border-radius: 3px;
     color: lawngreen;
     text-align: center;
     font-weight: 600;
-    cursor: pointer;   
+    cursor: pointer;  
+    font-family: 'Nunito', sans-serif; 
+    max-width: 200px;
+}
+
+select:hover{
+    background-color: rgb(60, 60, 60);
 }
 
 select > option{
@@ -76,7 +98,7 @@ select > option{
 
 .current-player{
     color: var(--secondary-color);
-    margin-bottom: 30px;
+    margin-bottom: 20px;
     text-transform: capitalize;
     font-size: clamp(1rem, calc(0.8rem + 2vw), 2.3rem);
     font-family: 'M PLUS Rounded 1c', sans-serif;
@@ -107,8 +129,8 @@ main{
     justify-content: center;
     align-items: center;
     /* background-color: red; */
-    width: clamp(60px, 7vw + 20px, 100px);
-    height: clamp(60px, 7vw + 20px, 100px);
+    width: clamp(60px, 7vw + 20px, 85px);
+    height: clamp(60px, 7vw + 20px, 85px);
     border:var(--primary-color) 2px solid;
     color: var(--primary-color);
 }
@@ -117,8 +139,9 @@ main{
     background-color: rgb(24, 24, 24);
     color: var(--secondary-color);
     border: var(--secondary-color) solid 2px;
-    margin-top: 30px;
-    padding: 13px 15px;
+    margin-top: 15px;
+    margin-bottom: 15px;
+    padding: 13px 13px;
     outline: none;
     border-radius: 5px;
     font-weight: 600;
@@ -174,7 +197,7 @@ main{
     padding: 13px 15px;
     border-radius: 5px;
     border: var(--primary-color) solid 2px;
-    background-color:#080808;
+    background-color:rgba(0, 0, 0, 0.5);
     color: var(--primary-color);
     transition: .2s ease-in;
     cursor: pointer;
@@ -233,6 +256,9 @@ footer{
 
 
 @media(max-width:540px){
+    .error-message{
+        margin-bottom: 20px;
+    }
     footer{
         flex-direction: column;
     }
