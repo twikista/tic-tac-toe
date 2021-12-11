@@ -70,7 +70,6 @@ const gameBoardModule = (function () {
   //finctionality to reset gameboard
   function resetBoard() {
     for (let i = 0; i < gameBoard.length; i++) {
-      console.log(gameBoard.length);
       gameBoard[i] = "";
     }
   }
@@ -83,6 +82,5 @@ const gameBoardModule = (function () {
     resetBoard,
     updateCurrentBoardState,
     getEmptyIndex,
-    emptyBoardCellIndex,
   };
 })();

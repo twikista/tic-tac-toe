@@ -10,8 +10,13 @@ const gamePlayModule = (function () {
   currentPlayer = "x";
   //switch between players after each board move
   function switchCurrentPlayer() {
+    if (
+      gameBoardModule.gameBoardWinStates() ||
+      gameBoardModule.boardIsFilled()
+    ) {
+      return;
+    }
     currentPlayer = currentPlayer === humanPlayer ? aiPlayer : humanPlayer;
-    console.log(currentPlayer);
     return currentPlayer;
   }
   //function that handles players move
@@ -23,9 +28,10 @@ const gamePlayModule = (function () {
       humanPlayerMove(e);
       setTimeout(beatableAiMove, 1000);
     } else {
-      return;
+      displayElement(appBody.firstElementChild.firstElementChild);
     }
   }
+
   //function that handles human player moves and save move to gameBoard
   function humanPlayerMove(e) {
     const target = e.target;
@@ -45,19 +51,19 @@ const gamePlayModule = (function () {
   }
   //function that handles AI player moves and save move to gameBoard
   function aiPlayerMove() {
-    // console.log(board);
     //save AI player best game move determined by minimax function to a variable
     const bestPlayMoveInfo = aiModule.miniMax(
       gameBoardModule.currentBoardState,
       aiPlayer
     );
-    console.log(bestPlayMoveInfo);
     //grab the index of gameBoard cell for AI player
     const targetCellIndex = bestPlayMoveInfo.index;
     const aiTargetCells = [...boardCells.children];
     let aiTargetCell = aiTargetCells[targetCellIndex];
-    console.log(aiTargetCell);
-    if (gameBoardModule.boardIsFilled()) {
+    if (
+      gameBoardModule.boardIsFilled() ||
+      gameBoardModule.gameBoardWinStates()
+    ) {
       return;
     }
     //display AI player move
@@ -73,18 +79,18 @@ const gamePlayModule = (function () {
 
   /************hhhhhhhhhh */
   function beatableAiMove() {
-    // console.log(board);
     //save AI player best game move determined by minimax function to a variable
     const emptyBoardCells = gameBoardModule.getEmptyIndex(
       gameBoardModule.currentBoardState
     );
     const selectedPlayCell = beatableAiModule.aiMove(emptyBoardCells);
-    console.log(selectedPlayCell);
     //grab the index of gameBoard cell for AI player
     const aiTargetCells = [...boardCells.children];
     let aiTargetCell = aiTargetCells[selectedPlayCell];
-    console.log(aiTargetCell);
-    if (gameBoardModule.boardIsFilled()) {
+    if (
+      gameBoardModule.boardIsFilled() ||
+      gameBoardModule.gameBoardWinStates()
+    ) {
       return;
     }
     //display AI player move
@@ -116,10 +122,10 @@ const gamePlayModule = (function () {
       endOfGameModal.firstElementChild.textContent = `${gameWinner(
         currentPlayer
       )} Wins`;
-      displayGameModal();
+      displayElement(endOfGameModal);
     } else if (gameBoardModule.boardIsFilled() && !boardWinState) {
       endOfGameModal.firstElementChild.textContent = `Tie Game!`;
-      displayGameModal();
+      displayElement(endOfGameModal);
     }
   }
   //reset game on button click
@@ -137,7 +143,7 @@ const gamePlayModule = (function () {
   function newGame(e) {
     const target = e.target;
     if (target.classList.contains("play-again-btn")) {
-      closeGameModal();
+      hideElement(endOfGameModal);
       gameBoardModule.resetBoard();
       resetGameDisplay();
       if (currentPlayer === humanPlayer) {
@@ -151,7 +157,6 @@ const gamePlayModule = (function () {
 
   function displayGameBoard(target) {
     if (target.textContent !== "") {
-      console.log(target.textContent);
       return;
     }
     target.textContent = humanPlayer;
@@ -170,12 +175,12 @@ const gamePlayModule = (function () {
     }
   }
 
-  function displayGameModal() {
-    endOfGameModal.classList.add("active");
+  function displayElement(ele) {
+    ele.classList.add("active");
   }
 
-  function closeGameModal() {
-    endOfGameModal.classList.remove("active");
+  function hideElement(ele) {
+    ele.classList.remove("active");
   }
   //choose game mode;
   let activeGameMode = null;
@@ -184,11 +189,16 @@ const gamePlayModule = (function () {
     gameModeElement.addEventListener("change", () => {
       activeGameMode =
         gameModeElement.options[gameModeElement.selectedIndex].value;
-      console.log(activeGameMode);
-      console.log(typeof activeGameMode);
+      //validate game mode selection
+      hideElement(appBody.firstElementChild.firstElementChild);
+      //reset game on change of game mode
+      gameBoardModule.resetBoard();
+      resetGameDisplay();
+      currentPlayer = humanPlayer;
     });
     return activeGameMode;
   }
+  setGameMode();
 
   boardCells.addEventListener("click", (e) => {
     playersMove(e, setGameMode());
@@ -196,7 +206,5 @@ const gamePlayModule = (function () {
   appBody.addEventListener("click", gameReset);
   appBody.addEventListener("click", newGame);
   this.addEventListener("DOMContentLoaded", displayPlayerTurn);
-  // appBody.addEventListener("click", endGame);
-
   return { currentPlayer };
 })();

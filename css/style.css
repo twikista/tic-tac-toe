@@ -60,11 +60,15 @@ header{
     font-weight: 400;
     color:orangered;
     padding: 5px 0;
+    margin-bottom: 5px;
     text-transform: uppercase;
     align-items: center;
     text-align: center;
     display: none;
+}
 
+.error-message.active{
+    display: block;
 }
 
 select{
